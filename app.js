@@ -21,14 +21,21 @@ const addLikedKeyToMovie = (movies) => {
 
 const renderMoviesToUI = () => {
     const movies = JSON.parse(localStorage.getItem("movies"));
-    console.log(movies);
     const moviesContainerEl = document.getElementById("movies-container");
     // lägga in filmerna som element i vårt UI
     movies.forEach(movie => {
         // skapa själva elementet för article för filmen
         const movieEl = document.createElement("article");
         movieEl.innerHTML = `
-                            <figure style="background-image: url(${movie.image})">
+                            <figure 
+                                style="background-image: url(${movie.image})"
+                                role="img"
+                                aria-label="Movie poster for ${movie.title}"
+                            >
+                                <figcaption>
+                                    Movie poster for ${movie.title}
+                                </figcaption>
+                                <label for="${movie.id}">Like ${movie.title}</label>
                                 <input class="like-checkbox" id="${movie.id}" type="checkbox" ${movie.liked ? "checked" : ""}>
                             </figure>
                             <h4 class="movie-container__title">${movie.title}</h4>
@@ -36,6 +43,28 @@ const renderMoviesToUI = () => {
                             `;
         moviesContainerEl.appendChild(movieEl);
     });
+    // lägga på eventlyssnare på våra checkboxar
+    const likeCheckboxes = document.querySelectorAll(".like-checkbox");
+    likeCheckboxes.forEach((checkbox) => {
+        checkbox.addEventListener("change", (event) => {
+            // uppdatera i LS
+            const moviesFromLS = JSON.parse(localStorage.getItem("movies"));
+            const id = event.target.id;
+            const movie = movies.find(m => m.id === id);
+            if (movie) {
+                movie.liked = !movie.liked;
+                // hitta index på objektet i listan via id
+                const index = moviesFromLS.findIndex(m => m.id === id);
+                // splice från gamla listan för att få in det uppdaterade objektet
+                moviesFromLS.splice(index, 1, movie);
+                // uppdatera listan i själva local storage
+                localStorage.setItem("movies", JSON.stringify(moviesFromLS));
+            } else {
+                console.log(`Movie with id ${id} not found`);
+            }
+        });
+    });
+    
 };
 
 const initApp = () => {
