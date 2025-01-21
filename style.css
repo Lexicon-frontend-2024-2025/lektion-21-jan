@@ -35,5 +35,8 @@ main {
         background-size: cover;
         background-repeat: no-repeat;
         background-position: center;
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-start;
     }
 }
