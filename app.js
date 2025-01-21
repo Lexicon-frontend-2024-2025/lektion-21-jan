@@ -26,16 +26,17 @@ const renderMoviesToUI = () => {
     movies.forEach(movie => {
         // skapa själva elementet för article för filmen
         const movieEl = document.createElement("article");
+        movieEl.setAttribute("class", "movie-container");
         movieEl.innerHTML = `
                             <figure 
                                 style="background-image: url(${movie.image})"
                                 role="img"
                                 aria-label="Movie poster for ${movie.title}"
                             >
-                                <figcaption>
+                                <figcaption class="sr-only">
                                     Movie poster for ${movie.title}
                                 </figcaption>
-                                <label for="${movie.id}">Like ${movie.title}</label>
+                                <label for="${movie.id}" class="sr-only">Like ${movie.title}</label>
                                 <input class="like-checkbox" id="${movie.id}" type="checkbox" ${movie.liked ? "checked" : ""}>
                             </figure>
                             <h4 class="movie-container__title">${movie.title}</h4>
